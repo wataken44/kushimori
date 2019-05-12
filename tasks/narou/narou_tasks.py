@@ -1,8 +1,12 @@
 
+import re
+from urllib.parse import urlparse
+
 from flask import Blueprint, request
 from bs4 import BeautifulSoup
 
 from utils.http import Req, parse_request_parameter, get_inner
+from novels.models import NovelModel
 
 application = Blueprint('tasks/narou', __name__)
 
@@ -16,10 +20,18 @@ def get_novel_index():
         # todo logging
         return '', 503
     
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.text, features="html.parser")
 
-    return u"%s\n%s\n%s\n%s" % parse_novel_info(soup)
+    path = urlparse(url).path
+    novel_id = re.sub("/.*$", "", re.sub("^/", "", path))
+
+    title, author, author_url, summary = parse_novel_info(soup)
+
+    model = NovelModel(novel_id, url, title, author, author_url, summary)
     
+    return "succeeded"
+
+# todo: move to sources/narou/
 def parse_novel_info(soup):
     title = None
 
@@ -45,10 +57,3 @@ def parse_novel_info(soup):
         summary = get_inner(summary_elems[0])
             
     return title, author, author_url, summary
-    
-    
-    
-
-    
-
-    

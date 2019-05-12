@@ -1,4 +1,4 @@
 flask
 requests
-google-cloud-datastore
+google-cloud-firestore
 BeautifulSoup4
