@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  kushimori:
+    build:
+      context: kushimori
+    container_name: kushimori
+    ports:
+      - "50000:22"
+    environment:
+      - TZ=Asiz/Tokyo
