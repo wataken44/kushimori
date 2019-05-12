@@ -11,7 +11,7 @@ RUN set -xe \
 
 RUN set -xe \
     && apt update \
-    && apt install -y lsb-release curl gnupg python3.7
+    && apt install -y lsb-release curl gnupg python3.7 python3-pip python3-venv
 
 RUN set -xe \
     && echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
