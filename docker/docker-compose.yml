@@ -5,6 +5,7 @@ services:
       context: kushimori
     container_name: kushimori
     ports:
-      - "50000:22"
+      - "50033:22"
+      - "50040:8080"
     environment:
       - TZ=Asiz/Tokyo
