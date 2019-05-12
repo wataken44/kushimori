@@ -54,7 +54,8 @@ class NovelModel(object):
         return self._novel_id
 
     def set_novel_id(self, novel_id):
-        self._novel_id, self._changed = [novel_id, self._novel_id != novel_id]
+        self._changed = self._changed or (self._novel_id != novel_id)
+        self._novel_id = novel_id
 
     novel_id = property(get_novel_id, set_novel_id, None, "")
 
@@ -62,7 +63,8 @@ class NovelModel(object):
         return self._title
 
     def set_title(self, title):
-        self._title, self._changed = [title, self._title != title]
+        self._changed = self._changed or (self._title != title)
+        self._title = title
 
     title = property(get_title, set_title, None, "")
 
@@ -70,7 +72,8 @@ class NovelModel(object):
         return self._url
 
     def set_url(self, url):
-        self._url, self._changed = [url, self._url != url]
+        self._changed = self._changed or (self._url != url)
+        self._url = url
 
     url = property(get_url, set_url, None, "")
 
@@ -78,7 +81,8 @@ class NovelModel(object):
         return self._author
 
     def set_author(self, author):
-        self._author, self._changed = [author, self._author != author]
+        self._changed = self._changed or (self._author != author)
+        self._author = author
 
     author = property(get_author, set_author, None, "")
 
@@ -86,7 +90,8 @@ class NovelModel(object):
         return self._author_url
 
     def set_author_url(self, author_url):
-        self._author_url, self._changed = [author_url, self._author_url != author_url]
+        self._changed = self._changed or (self._author_url != author_url)
+        self._author_url = author_url
 
     author_url = property(get_author_url, set_author_url, None, "")
 
@@ -94,6 +99,7 @@ class NovelModel(object):
         return self._summary
 
     def set_summary(self, summary):
-        self._summary, self._changed = [summary, self._summary != summary]
+        self._changed = self._changed or (self._summary != summary)
+        self._summary = summary
 
     summary = property(get_summary, set_summary, None, "")
