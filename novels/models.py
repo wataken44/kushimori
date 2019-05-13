@@ -15,9 +15,8 @@ class NovelModel(object):
         self._changed = False
 
 
-    # data create/read/update/delete
-
-    def update(self):
+    # data get/put
+    def put(self):
         db = firestore.Client()
         data = self.to_dict()
         db.collection(NOVEL_COLLECTION).document(self._novel_id).set(data)

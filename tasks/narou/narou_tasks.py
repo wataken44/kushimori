@@ -5,8 +5,10 @@ from urllib.parse import urlparse
 from flask import Blueprint, request
 from bs4 import BeautifulSoup
 
-from utils.http import Req, parse_request_parameter, get_inner
+from utils.http import Req, parse_request_parameter
 from novels.models import NovelModel
+from sites.narou.parser import NarouNovelIndexParser
+from sites.narou.utils import get_novel_id_by_url
 
 application = Blueprint('tasks/narou', __name__)
 
@@ -19,41 +21,14 @@ def get_novel_index():
     if resp.status_code != 200:
         # todo logging
         return '', 503
+
+    parser = NarouNovelIndexParser(url, html=resp.text)
+
+    novel = parser.parse_novel_info()
+    novel["novel_id"] = get_novel_id_by_url(url)
+    novel["url"] = url
     
-    soup = BeautifulSoup(resp.text, features="html.parser")
-
-    path = urlparse(url).path
-    novel_id = re.sub("/.*$", "", re.sub("^/", "", path))
-
-    title, author, author_url, summary = parse_novel_info(soup)
-
-    model = NovelModel(novel_id, url, title, author, author_url, summary)
+    model = NovelModel.from_dict(novel)
+    model.put()
     
-    return "succeeded"
-
-# todo: move to sources/narou/
-def parse_novel_info(soup):
-    title = None
-
-    title_elems = soup.find_all("p", class_="novel_title")
-    if len(title_elems) > 0:
-        title = title_elems[0].string
-
-    author = None
-    author_url = None
-    author_elems = soup.find_all("div", class_="novel_writername")
-    if len(author_elems) > 0:
-        ae = author_elems[0]
-        if len(ae.contents) == 1:
-            # author does not have url
-            author = ae.contents[0].strip().replace("作者：", "")
-        else:
-            author = ae.a.string
-            author_url = ae.a.get('href')
-
-    summary = None
-    summary_elems = soup.find_all("div", id="novel_ex")
-    if len(summary_elems) > 0:
-        summary = get_inner(summary_elems[0])
-            
-    return title, author, author_url, summary
+    return str(parser.parse_episodes_info())

@@ -35,5 +35,5 @@ def parse_request_parameter(request, *args):
     else:
         return ret
 
-def get_inner(tag):
+def get_inner_text(tag):
     return ''.join(map(lambda c: str(c), tag.contents))
