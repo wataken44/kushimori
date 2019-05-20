@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 from utils.http import Req, parse_request_parameter
 from novels.models import NovelModel
 from sites.narou.parser import NarouNovelIndexParser
-from sites.narou.utils import get_novel_id_by_url
 
 application = Blueprint('tasks/narou', __name__)
 
@@ -25,10 +24,8 @@ def get_novel_index():
     parser = NarouNovelIndexParser(url, html=resp.text)
 
     novel = parser.parse_novel_info()
-    novel["novel_id"] = get_novel_id_by_url(url)
-    novel["url"] = url
     
     model = NovelModel.from_dict(novel)
     model.put()
-    
+
     return str(parser.parse_episodes_info())

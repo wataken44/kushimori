@@ -4,16 +4,12 @@ import re
 
 SITE_INDEX="n01"
 
-def get_novel_id(ncode):
+def make_novel_id(ncode):
     if ncode is None:
         return None
     return "%s-%s" % (SITE_INDEX, ncode)
 
-def get_novel_id_by_url(url):
-    n, e = _parse_url(url)
-    return get_novel_id(n)
-
-def get_episode_id(ncode, episode):
+def make_episode_id(ncode, episode):
     e = episode
     if type(episode) == int:
         e = "%04d" % episode
@@ -21,11 +17,21 @@ def get_episode_id(ncode, episode):
         e = "%04d" % int(episode)
     return "%s-%s-%s" % (SITE_INDEX, ncode, e)
 
-def get_episode_id_by_url(url):
-    n, e = _parse_url(url)
-    return get_episode_id(n, e)
+def get_site_novel_id(url):
+    return parse_url(url)[0]
+
+def get_site_episode_id(url):
+    return parse_url(url)[1]
+
+def get_novel_id_from_url(url):
+    n, e = parse_url(url)
+    return make_novel_id(n)
+
+def get_episode_id_from_url(url):
+    n, e = parse_url(url)
+    return make_episode_id(n, e)
     
-def _parse_url(url):
+def parse_url(url):
     path = urlparse(url).path
     arr = path.split("/")
 

@@ -4,24 +4,22 @@ from google.cloud import firestore
 NOVEL_COLLECTION = u'novels'
 
 class NovelModel(object):
-    def __init__(self, novel_id, title, url, author, author_url, summary):
+    def __init__(self, novel_id, title, url, author, author_url, summary, episode_count):
         self._novel_id = novel_id
         self._title = title
         self._url = url
         self._author = author
         self._author_url = author_url
         self._summary = summary
+        self._episode_count = episode_count
 
         self._changed = False
-
 
     # data get/put
     def put(self):
         db = firestore.Client()
         data = self.to_dict()
         db.collection(NOVEL_COLLECTION).document(self._novel_id).set(data)
-        
-    # converters
         
     @staticmethod
     def from_dict(source):
@@ -31,8 +29,9 @@ class NovelModel(object):
         author = source["author"]
         author_url = source["author_url"]
         summary = source["summary"]
+        episode_count = source["episode_count"]
 
-        return NovelModel(novel_id, title, url, author, author_url, summary)
+        return NovelModel(novel_id, title, url, author, author_url, summary, episode_count)
 
     def to_dict(self):
         return {
@@ -42,8 +41,9 @@ class NovelModel(object):
             "author": self._author,
             "author_url": self._author_url,
             "summary": self._summary,
+            "episode_count": self._episode_count,
         }
-    
+
     def is_changed(self):
         return self._changed
 
@@ -102,3 +102,13 @@ class NovelModel(object):
         self._summary = summary
 
     summary = property(get_summary, set_summary, None, "")
+
+    def get_episode_count(self):
+        return self._episode_count
+
+    def set_episode_count(self, episode_count):
+        self._changed = self._changed or (self._episode_count != episode_count)
+        self._episode_count = episode_count
+
+    episode_count = property(get_episode_count, set_episode_count, None, "")
+
