@@ -44,6 +44,15 @@ class NovelModel(object):
             "episode_count": self._episode_count,
         }
 
+    def assign(self, source):
+        self.novel_id = source["novel_id"]
+        self.title = source["title"]
+        self.url = source["url"]
+        self.author = source["author"]
+        self.author_url = source["author_url"]
+        self.summary = source["summary"]
+        self.episode_count = source["episode_count"]
+    
     def is_changed(self):
         return self._changed
 
