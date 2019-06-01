@@ -14,12 +14,23 @@ class NovelModel(object):
         self._episode_count = episode_count
 
         self._changed = False
-
+        
     # data get/put
-    def put(self):
+    @staticmethod
+    def get_collection():
         db = firestore.Client()
+        return db.collection(NOVEL_COLLECTION)
+
+    @staticmethod
+    def get(novel_id):
+        ref = NovelModel.get_collection().document(novel_id).get()
+        if not ref.exists:
+            return None
+        return NovelModel.from_dict(ref.to_dict())
+
+    def put(self):
         data = self.to_dict()
-        db.collection(NOVEL_COLLECTION).document(self._novel_id).set(data)
+        NovelModel.get_collection().document(self._novel_id).set(data)
         
     @staticmethod
     def from_dict(source):

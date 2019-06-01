@@ -1,4 +1,10 @@
 
+import zlib
+
+from google.cloud import firestore
+
+EPISODE_COLLECTION = u'episodes'
+EPISODE_TEXT_COLLECTION = u'episode_texts'
 
 class EpisodeModel(object):
     def __init__(self, episode_id, chapter_index, chapter_title, title, url, created_at, updated_at):
@@ -12,6 +18,23 @@ class EpisodeModel(object):
 
         self._changed = False
 
+    # data get/put
+    @staticmethod
+    def get_collection():
+        db = firestore.Client()
+        return db.collection(EPISODE_COLLECTION)
+
+    @staticmethod
+    def get(episode_id):
+        ref = EpisodeModel.get_collection().document(episode_id).get()
+        if not ref.exists:
+            return None
+        return EpisodeModel.from_dict(ref.to_dict())
+
+    def put(self):
+        data = self.to_dict()
+        EpisodeModel.get_collection().document(self._episode_id).set(data)
+        
     @staticmethod
     def from_dict(source):
         episode_id = source["episode_id"]
@@ -111,3 +134,73 @@ class EpisodeModel(object):
         self._updated_at = updated_at
 
     updated_at = property(get_updated_at, set_updated_at, None, "")
+
+
+    
+class EpisodeTextModel(object):
+    def __init__(self, episode_id, text):
+        self._episode_id = episode_id
+        self._text = text
+
+        self._changed = False
+        
+    @staticmethod
+    def from_dict(source):
+        episode_id = source["episode_id"]
+        text = source["text"]
+
+        return EpisodeTextModel(episode_id, text)
+
+    def to_dict(self):
+        return {
+            "episode_id": self._episode_id,
+            "text": self._text,
+        }
+
+    def is_changed(self):
+        return self._changed
+
+    # data get/put
+    @staticmethod
+    def get_collection():
+        db = firestore.Client()
+        return db.collection(EPISODE_TEXT_COLLECTION)
+
+    @staticmethod
+    def get(episode_id):
+        ref = EpisodeTextModel.get_collection().document(episode_id).get()
+        if not ref.exists:
+            return None
+
+        data = ref.to_dict()
+        if "text" in data:
+            data["text"] = zlib.decompress(data["text"]) # decompress
+            data["text"] = data["text"].decode("utf-8") # from utf-8 bytes to unicode
+        
+        return EpisodeTextModel.from_dict(data)
+
+    def put(self):
+        data = self.to_dict()
+        data["text"] = data["text"].encode("utf-8") # from unicode to utf-8 bytes
+        data["text"] = zlib.compress(data["text"]) # compress
+        EpisodeTextModel.get_collection().document(self._episode_id).set(data)
+
+    # properties
+
+    def get_episode_id(self):
+        return self._episode_id
+
+    def set_episode_id(self, episode_id):
+        self._changed = self._changed or (self._episode_id != episode_id)
+        self._episode_id = episode_id
+
+    episode_id = property(get_episode_id, set_episode_id, None, "")
+
+    def get_text(self):
+        return self._text
+
+    def set_text(self, text):
+        self._changed = self._changed or (self._text != text)
+        self._text = text
+
+    text = property(get_text, set_text, None, "")

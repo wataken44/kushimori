@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from sites.narou.utils import get_site_novel_id, make_novel_id, make_episode_id
-from utils.http import get_inner_text
+from utils.html import get_inner_text, remove_tag_p_br
 from utils.datetime import get_datetime_from_jst, DAY_ONE
 
 class NarouNovelIndexParser(object):
@@ -13,7 +13,7 @@ class NarouNovelIndexParser(object):
         self._url = url
         self._ncode = get_site_novel_id(url)
         self._soup = soup
-        if soup == None:
+        if soup is None:
             self._soup = BeautifulSoup(html, features="html.parser")
 
     def get_soup(self):
@@ -41,6 +41,7 @@ class NarouNovelIndexParser(object):
         summary_elem = self._soup.find("div", id="novel_ex")
         if summary_elem:
             summary = get_inner_text(summary_elem)
+            summary = remove_tag_p_br(summary)
 
         episode_count = 1
         episodes_elems = self._soup.findAll("dl", class_="novel_sublist2")
@@ -142,6 +143,20 @@ class NarouNovelIndexParser(object):
         
 
 class NarouNovelEpisodeParser(object):
-    def parse(self, html):
-        pass
+    def __init__(self, url, html=None, soup=None):
+        self._url = url
+        self._ncode = get_site_novel_id(url)
+        self._soup = soup
+        if soup is None:
+            self._soup = BeautifulSoup(html, features="html.parser")
 
+    def parse(self):
+        text_elem = self._soup.find("div", id="novel_honbun")
+
+        if text_elem is None:
+            return None
+
+        text = get_inner_text(text_elem)
+        text = remove_tag_p_br(text)
+
+        return { "text": text.strip() }
