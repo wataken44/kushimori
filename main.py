@@ -9,20 +9,17 @@
 from flask import Flask
 
 import tasks
+import kushimori
 
 def build_app():
     app = Flask(__name__)
+    kushimori.register_blueprints(app)
     tasks.register_blueprints(app)
 
     return app
 
 app = build_app()
     
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
-
 def main():
     app.run(host='0.0.0.0', port=8080, debug=True)
 
