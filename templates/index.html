@@ -6,22 +6,16 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>kushimori</title>
 
-    <!-- firebase -->
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
-    <!-- only use firebase-auth -->
-    <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-auth.js"></script>
-
-    <script src="/static/kushimori.js"></script>
-
-    <script>
-    </script>
   </head>
   <body>
     <nav class="navbar navbar-light bg-light">
       <a class="navbar-brand" href="/">kushimori</a>
       <div class="mr-auto"></div>
-      <a href="/login" id="login_or_username">login</a>
+      {%- if session %}
+      <a href="#">{{ session.screen_name }}</a>
+      {%- else %}
+      <a href="/login" >login</a>
+      {%- endif %}
     </nav>
     
     <div class="container-fluid">

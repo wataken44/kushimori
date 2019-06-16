@@ -1,12 +1,24 @@
 
-_debug = None
+import json
+import os
+import sys
 
-def set_debug(flag):
-    global _debug
-    if _debug is None:
-        _debug = flag
+_config = None
 
-def is_debug():
-    return _debug
+def load_config():
+    global _config
 
-print(__file__)
+    fn = os.path.abspath(os.path.dirname(__file__) + "/../config.json")
+
+    fp = open(fn)
+    _config = json.load(fp)
+    fp.close()
+
+def get_config(key = None):
+    global _config
+    if key:
+        if key in _config:
+            return _config[key]
+        return None
+    else:
+        return _config

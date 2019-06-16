@@ -55,9 +55,12 @@ kushimori.createSessionAfterAuth = function() {
             'Authorization': 'Bearer ' + idToken
           }
         }).then(function(data) {
-          // TODO: save session to cookie
-          // TODO: json parse
-          console.log(data["session"])
+          if(data["session"]) {
+            // login succeeded
+            Cookies.set('session_id', data["session"], { expires: 360 });
+            // redirect
+            location.href="/";
+          }
         });
       });
     }
