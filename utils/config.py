@@ -8,3 +8,5 @@ def set_debug(flag):
 
 def is_debug():
     return _debug
+
+print(__file__)

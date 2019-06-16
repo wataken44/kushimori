@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>kushimori</title>
-
+    <title>kushimori login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- firebase -->
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
@@ -13,21 +13,24 @@
     <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-auth.js"></script>
 
     <script src="/static/kushimori.js"></script>
-
+    
+    <!-- firebase ui -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
     <script>
+      kushimori.initializeFirebaseUI("#firebaseui-auth-container");
+      kushimori.createSessionAfterAuth();
     </script>
+    
   </head>
   <body>
-    <nav class="navbar navbar-light bg-light">
-      <a class="navbar-brand" href="/">kushimori</a>
-      <div class="mr-auto"></div>
-      <a href="/login" id="login_or_username">login</a>
-    </nav>
-    
+
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm">
-          <h3>
+          <h3>Login</h3>
+          <p>if you are not in Authorized User, you cannot use this app even if you login</p>
+          <div id="firebaseui-auth-container"></div>
         </div>
       </div>
     </div>
