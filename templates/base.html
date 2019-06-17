@@ -4,27 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>kushimori</title>
+    <title>{% block title %}kushimori{% endblock %} </title>
 
   </head>
   <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-dark py-0">
       <div class="navbar-collapse">
+        {% block navbar_left %}
         <ul class="navbar-nav">
-          {%- if session %}
-          <li class="nav-item"><a class="nav-link" href="/dashboard/">list</a></li>
-          {%- else %}
           <li class="nav-item"><a class="nav-link" href="/">kushimori</a></li>
-          {%- endif %}
+          <li class="nav-item"><a class="nav-link" href="/dashboard/">list</a></li>
         </ul>
+        {% endblock %}
       </div>
       <div class="mr-auto"></div>
       <div>
+        {% block navbar_right %}
         {%- if session %}
         <a class="nav-link" href="/dashboard/me">{{ session.screen_name }}</a>
         {%- else %}
         <a class="nav-link" href="/login" >login</a>
         {%- endif %}
+        {% endblock %}
       </div>
     </nav>
     

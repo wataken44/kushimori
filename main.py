@@ -8,6 +8,7 @@
 
 from flask import Flask
 
+import dashboard
 import kushimori
 import tasks
 import users
@@ -16,6 +17,7 @@ import utils.config
 
 def build_app():
     app = Flask(__name__)
+    dashboard.register_blueprints(app)
     kushimori.register_blueprints(app)
     tasks.register_blueprints(app)
     users.register_blueprints(app)
