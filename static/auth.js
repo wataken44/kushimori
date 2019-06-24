@@ -1,8 +1,8 @@
 
-var kushimori = {};
+var kushimori = kushimori || {};
 
 kushimori.initializeFirebase = function() {
-  var firebaseConfig = {
+  let firebaseConfig = {
     apiKey: "AIzaSyAcFlYHOdBR0FJyKvvH-qJiYiyDxA7_HVk",
     authDomain: "kushimori.firebaseapp.com",
     databaseURL: "https://kushimori.firebaseio.com",
@@ -18,7 +18,7 @@ kushimori.initializeFirebase();
 
 kushimori.initializeFirebaseUI = function(selector) {
   // FirebaseUI config.
-  var uiConfig = {
+  let uiConfig = {
     signInSuccessUrl: '/login',
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
@@ -33,7 +33,7 @@ kushimori.initializeFirebaseUI = function(selector) {
   };
 
   // Initialize the FirebaseUI Widget using Firebase.
-  var ui = new firebaseui.auth.AuthUI(firebase.auth());
+  let ui = new firebaseui.auth.AuthUI(firebase.auth());
   // The start method will wait until the DOM is loaded.
   ui.start(selector, uiConfig);
 }
@@ -41,7 +41,7 @@ kushimori.initializeFirebaseUI = function(selector) {
 kushimori.createSessionAfterAuth = function() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var name = user.displayName;
+      let name = user.displayName;
       user.getIdToken().then(function(idToken) {
         $.ajax({
           'url': '/session',
@@ -59,7 +59,7 @@ kushimori.createSessionAfterAuth = function() {
             // login succeeded
             Cookies.set('session_id', data["session"], { expires: 360 });
             // redirect
-            location.href="/";
+            location.href="/dashboard/";
           }
         });
       });

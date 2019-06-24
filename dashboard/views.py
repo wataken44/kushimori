@@ -26,4 +26,5 @@ def get_follow(session):
 
 @application.route("/dashboard/follow_urls", methods=['POST'])
 def post_follow():
-    return render_template('login.html')
+    print(request.headers.get('Authorization'))
+    return ""
